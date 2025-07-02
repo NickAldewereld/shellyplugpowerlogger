@@ -52,7 +52,7 @@ Gebruik deze repo als startpunt. Meet je laptop, server, NAS, monitor of router.
 ---
 
 **Auteur:** Nick (Aldewereld)  
-**Contact:** [LinkedIn](https://www.linkedin.com/in/nickaldewereld) / [nixpay.nl](https://nixpay.nl)
+**Contact:** [LinkedIn](https://www.linkedin.com/in/nickaldewereld) / [aldewereldconsultancy.nl](https://aldewereldconsultancy.nl)
 
 ---
 
