@@ -1,0 +1,116 @@
+# 🔗 Externe koppelingen met Shelly Plug S Gen3
+
+Je kunt Shelly-data op verschillende manieren koppelen aan externe services. Hieronder drie beproefde methodes — van eenvoudig tot professioneel.
+
+---
+
+## ✅ 1. Push naar een externe API (via `curl` of Python)
+
+Gebruik dit als je zelf een externe service of endpoint hebt, zoals:
+- een Flask API
+- een ingest-API
+- een Zapier Webhook
+
+### 🧪 Voorbeeld met `curl` (bash)
+```bash
+curl -X POST https://your-external-service.com/data \
+  -H "Content-Type: application/json" \
+  -d '{"timestamp": 1725357162, "power": 84.2}'
+🔁 Automatiseren in je logging-script
+Voeg dit toe onderaan je while true-loop:
+
+bash
+Kopiëren
+Bewerken
+curl -s -X POST https://your-api.com/power \
+  -H "Content-Type: application/json" \
+  -d "{\"timestamp\":${TIMESTAMP},\"power\":${POWER}}" > /dev/null
+✅ 2. Gebruik MQTT (aanbevolen voor real-time & schaalbaarheid)
+Shelly ondersteunt native MQTT, wat ideaal is voor koppelingen met:
+
+Home Assistant
+
+Node-RED
+
+Mosquitto MQTT broker
+
+InfluxDB via Telegraf
+
+Grafana dashboards
+
+📦 Stappen
+Zet MQTT aan via de Shelly Web UI
+
+Ga naar: Settings → Internet & Security → MQTT
+
+Stel in:
+
+Server: IP-adres van je MQTT broker
+
+Topic: bijv. shelly/plug1
+
+Installeer een lokale MQTT broker (optioneel)
+
+bash
+
+sudo apt install mosquitto mosquitto-clients
+Abonneer je op een MQTT-topic
+
+bash
+
+mosquitto_sub -h localhost -t "shelly/plug1/relay/0/power"
+Stuur door naar externe systemen
+
+Via Node-RED
+
+Of met een Python MQTT-client (bijv. paho-mqtt)
+
+✅ 3. Externe loggingservice (plug & play)
+A. InfluxDB + Grafana
+Perfect voor tijdreeksen en dashboards. Je kunt rechtstreeks data sturen met Python of Telegraf.
+
+Voorbeeld in Python:
+python
+Kopiëren
+Bewerken
+from influxdb import InfluxDBClient
+
+client = InfluxDBClient(host='your-influx-host', port=8086)
+client.switch_database('powerdb')
+
+json_body = [
+    {
+        "measurement": "power",
+        "tags": {"device": "shelly_gen3"},
+        "fields": {"value": 84.2}
+    }
+]
+client.write_points(json_body)
+B. Home Assistant
+Volledige integratie mogelijk:
+
+Dashboards
+
+Automatiseringen
+
+Energierapportages
+
+💡 Herkent de Shelly Plug Gen3 out-of-the-box.
+
+🔐 Veiligheidstips
+Gebruik HTTPS voor je API’s
+
+Voeg een API-token toe in headers
+
+Zet IP-whitelisting aan
+
+Overweeg gebruik van VPN of Tailscale voor private netwerktoegang
+
+🎯 Keuzehulp
+Doel	Aanpak
+Zelf dingen bouwen, meten & leren	Bash + Python + eigen API
+Real-time, schaalbaar	MQTT + broker + Node-RED / InfluxDB
+Automatisering & dashboards	Home Assistant
+Plug & play logging voor data science	InfluxDB + Grafana
+
+perl
