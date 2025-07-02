@@ -1,0 +1,17 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+pow = pd.read_csv("pow.csv", sep=';', skiprows=1, names=["timestamp", "power"])
+pow['timestamp'] = pd.to_datetime(pow['timestamp'], unit='s')
+pow = pow.set_index('timestamp')
+
+plt.figure(figsize=(10, 4))
+plt.plot(pow['power'], label='Power (W)', alpha=0.6)
+plt.plot(pow['power'].rolling(60).mean(), label='1 min avg', linewidth=2)
+plt.xlabel("Time")
+plt.ylabel("Power (W)")
+plt.title("Desktop Power Usage")
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+plt.show()
