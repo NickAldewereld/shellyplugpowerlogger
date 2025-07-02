@@ -1,0 +1,14 @@
+#!/bin/bash
+
+OUTPUT_FILE="pow.csv"
+SHELLY_URL="http://192.168.1.38/rpc/Switch.GetStatus?id=0"
+INTERVAL=1  # in seconds
+
+echo "timestamp;power" > "$OUTPUT_FILE"
+
+while true; do
+  TIMESTAMP=$(date +%s)
+  POWER=$(curl -s "$SHELLY_URL" | jq '.apower // 0')
+  echo "${TIMESTAMP};${POWER}" | tee -a "$OUTPUT_FILE"
+  sleep "$INTERVAL"
+done
